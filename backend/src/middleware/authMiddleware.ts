@@ -1,21 +1,33 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+   import jwt, { JwtPayload } from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'zRUu2DEQJg5MMCi81y48ITM6HL4SJlR+4XkmJrEMB3g=';
+   interface UserPayload extends JwtPayload {
+     id: number;
+     username: string;
+   }
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+   const JWT_SECRET = process.env.JWT_SECRET || 'zRUu2DEQJg5MMCi81y48ITM6HL4SJlR+4XkmJrEMB3g=';
 
-  if (!token) {
-    return res.status(401).json({ message: 'No token provided' });
-  }
+   export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+     const authHeader = req.headers['authorization'];
 
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ message: 'Invalid token' });
-    }
-    (req as any).user = user;
-    next();
-  });
-};
+     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+       return res.status(401).json({ message: 'No token or invalid format' });
+     }
+
+     const token = authHeader.split(' ')[1];
+
+     jwt.verify(token, JWT_SECRET, (err, decoded) => {
+       if (err) {
+         console.error('Token verification error:', err.message);
+         return res.status(403).json({ message: 'Invalid or expired token' });
+       }
+
+       if (!decoded || typeof decoded === 'string' || !('id' in decoded)) {
+         return res.status(403).json({ message: 'Invalid token payload' });
+       }
+
+       (req as Request & { user: UserPayload }).user = decoded as UserPayload;
+       next();
+     });
+   };
