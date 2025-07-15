@@ -1,11 +1,10 @@
 
 # Oceans React Challenge
 
-"""
 This project is currently being developed to be fully implemented as a full-stack solution on AWS.
 The application is hosted at: https://main.d2y65hwl2if97r.amplifyapp.com/
 Further updates and enhancements are planned to leverage AWS services for scalability and performance.
-"""
+
 
 ## Overview
 
