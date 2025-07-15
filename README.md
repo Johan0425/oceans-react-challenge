@@ -1,12 +1,5 @@
-/**
- *
- * 
- * ## Recommendations:
- * - Use a password manager to generate and store strong passwords.
- * - Avoid using easily guessable usernames or passwords.
- * - Regularly update your credentials and follow best practices for account security.
- */
-# oceans-react-challenge
+
+# Oceans React Challenge
 
 ## Overview
 
