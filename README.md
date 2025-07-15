@@ -1,6 +1,12 @@
 
 # Oceans React Challenge
 
+"""
+This project is currently being developed to be fully implemented as a full-stack solution on AWS.
+The application is hosted at: https://main.d2y65hwl2if97r.amplifyapp.com/
+Further updates and enhancements are planned to leverage AWS services for scalability and performance.
+"""
+
 ## Overview
 
 The `oceans-react-challenge` is a React-based application designed to showcase modern web development practices. This project demonstrates the use of React components, state management, API integration, and additional features to create a functional and user-friendly interface. It also includes comprehensive documentation and tools to ensure a seamless developer experience.
