@@ -2,6 +2,21 @@ import { Request, Response } from 'express';
 import { createOrder, getAllOrdersWithDetails } from '../models/orderModel';
 import { IOrder, IOrderItem } from '../types';
 
+/**
+ * Handles the creation of a new order.
+ *
+ * This function processes the incoming request to create an order for the authenticated user.
+ * It validates the order items, ensures they meet the required criteria, and then creates the order
+ * in the database. If successful, it responds with the created order; otherwise, it returns an error response.
+ *
+ * @param req - The HTTP request object, expected to contain the authenticated user's ID and order items in the body.
+ * @param res - The HTTP response object used to send back the appropriate response.
+ *
+ * @throws {Error} If there is an issue during order creation, a 500 status code is returned with the error message.
+ *
+ * @returns A JSON response with the created order on success or an error message on failure.
+ */
+
 export const createOrderHandler = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id; // From authMiddleware
@@ -30,6 +45,18 @@ export const createOrderHandler = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves all orders with their details for the authenticated user.
+ *
+ * @param req - The HTTP request object, which includes the authenticated user's ID in `req.user.id`.
+ * @param res - The HTTP response object used to send the response back to the client.
+ * 
+ * @remarks
+ * This function assumes that the `authMiddleware` has been applied to the route,
+ * and that it attaches the authenticated user's ID to the `req.user` object.
+ *
+ * @throws Will return a 500 status code with an error message if an error occurs while fetching orders.
+ */
 export const getOrders = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id; // From authMiddleware

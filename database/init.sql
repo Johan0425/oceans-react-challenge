@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS order_items (
 );
 
 -- 4. Insert a test admin user with a bcrypt-hashed password
--- Using a bcrypt hash for 'admin123' (you can generate a new one with bcrypt.hash('yourpassword', 12))
+-- Using a bcrypt hash for 'admin123' 
 INSERT INTO users (username, password, role)
 SELECT 'admin', '$2b$12$QjSH496pQ/9Nq5G6x0T9T.e6W9x0Q2pX8K9y4Z6m3N5q7R1s9U.v2', 'admin'
 ON CONFLICT (username) DO NOTHING;

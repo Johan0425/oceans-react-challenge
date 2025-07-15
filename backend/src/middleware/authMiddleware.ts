@@ -8,6 +8,25 @@ import { Request, Response, NextFunction } from 'express';
 
    const JWT_SECRET = process.env.JWT_SECRET || 'zRUu2DEQJg5MMCi81y48ITM6HL4SJlR+4XkmJrEMB3g=';
 
+  /**
+   * Middleware to authenticate a JSON Web Token (JWT) from the request's `Authorization` header.
+   * 
+   * This function checks for the presence of a Bearer token in the `Authorization` header,
+   * verifies its validity, and attaches the decoded payload to the `req.user` property if valid.
+   * 
+   * @param req - The incoming HTTP request object.
+   * @param res - The outgoing HTTP response object.
+   * @param next - The next middleware function in the stack.
+   * 
+   * @throws {401} If the `Authorization` header is missing or does not start with "Bearer ".
+   * @throws {403} If the token is invalid, expired, or the payload is malformed.
+   * 
+   * Example of a valid `Authorization` header:
+   * ```
+   * Authorization: Bearer <token>
+   * ```
+   */
+  
    export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
      const authHeader = req.headers['authorization'];
 

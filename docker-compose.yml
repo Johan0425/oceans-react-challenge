@@ -1,3 +1,36 @@
+# This Docker Compose file defines a multi-service application with three main services: db, backend, and frontend.
+# It uses version 3.8 of the Docker Compose specification.
+
+# Services:
+# 1. db:
+#    - Runs a PostgreSQL database using the postgres:15-alpine image.
+#    - Exposes port 5432 for database access.
+#    - Uses environment variables for database configuration (DB_DATABASE, DB_USER, DB_PASSWORD).
+#    - Mounts a volume for persistent data storage and initializes the database with an SQL script.
+#    - Includes a health check to ensure the database is ready before dependent services start.
+#    - Connected to the custom network 'restaurant-network'.
+
+# 2. backend:
+#    - Builds the backend application from the ./backend directory.
+#    - Exposes port 3001 (mapped to port 3000 inside the container).
+#    - Configured with environment variables for database connection and application settings.
+#    - Depends on the db service and waits for it to be healthy before starting.
+#    - Connected to the custom network 'restaurant-network'.
+
+# 3. frontend:
+#    - Builds the frontend application using the Dockerfile in the ./frontend directory.
+#    - Exposes port 3000 (mapped to port 80 inside the container).
+#    - Configured with an environment variable for the API URL (REACT_APP_API_URL).
+#    - Mounts the ./frontend directory for live development and /app/node_modules for dependencies.
+#    - Depends on the backend service.
+#    - Connected to the custom network 'restaurant-network'.
+
+# Volumes:
+# - pgdata: A named volume for persisting PostgreSQL data.
+
+# Networks:
+# - restaurant-network: A custom bridge network for inter-service communication.
+
 version: '3.8'
 
 services:
@@ -38,6 +71,24 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - restaurant-network
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend_app
+    ports:
+      - "3000:80"
+    environment:
+      REACT_APP_API_URL: http://localhost:5000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
     networks:
       - restaurant-network
 

@@ -1,6 +1,26 @@
 import pool from '../config/db';
    import { IOrder, IOrderItem } from '../types';
 
+  /**
+   * Creates a new order for a user, including associated order items, and stores it in the database.
+   * The operation is performed within a transaction to ensure data consistency.
+   *
+   * @param userId - The ID of the user placing the order.
+   * @param orderItems - An array of order items, each containing product ID, quantity, and price at the time of order.
+   * @returns A promise that resolves to the created order, including its associated order items.
+   * 
+   * @throws Will throw an error if the order creation fails or if the transaction cannot be completed.
+   * 
+   * Example usage:
+   * ```typescript
+   * const order = await createOrder(1, [
+   *   { product_id: 101, quantity: 2, price_at_time: 50 },
+   *   { product_id: 102, quantity: 1, price_at_time: 30 },
+   * ]);
+   * console.log(order);
+   * ```
+   */
+  
    export const createOrder = async (userId: number, orderItems: IOrderItem[]): Promise<IOrder> => {
      const client = await pool.connect();
      try {

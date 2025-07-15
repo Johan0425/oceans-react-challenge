@@ -3,11 +3,26 @@ import jwt from 'jsonwebtoken';
 import { findUserByUsername, comparePassword, createUser } from '../models/userModel';
 import bcrypt from 'bcryptjs';
 
+
+
 const JWT_SECRET = process.env.JWT_SECRET || 'zRUu2DEQJg5MMCi81y48ITM6HL4SJlR+4XkmJrEMB3g=';
 
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET is not defined in .env');
 }
+
+/**
+ * Handles user login by validating credentials and generating a JWT token.
+ *
+ * @param req - The HTTP request object containing the username and password in the body.
+ * @param res - The HTTP response object used to send back the response.
+ *
+ * @returns A JSON response containing the JWT token if the credentials are valid,
+ *          or an error message with the appropriate HTTP status code.
+ *
+ * @throws Returns a 401 status code if the credentials are invalid.
+ *         Returns a 500 status code if there is a server error.
+ */
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
@@ -24,6 +39,41 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+/**
+ * Handles user registration by validating input, checking for existing users,
+ * creating a new user, and generating a JWT token upon successful registration.
+ *
+ * @param req - The HTTP request object, expected to contain `username` and `password` in the body.
+ * @param res - The HTTP response object used to send back the appropriate response.
+ *
+ * @remarks
+ * - The `username` and `password` fields are required.
+ * - The `password` must be at least 8 characters long.
+ * - If the `username` already exists, the registration will fail.
+ * - A JWT token is generated for the newly registered user, valid for 1 hour.
+ *
+ * @throws
+ * - Returns a 400 status code if the input validation fails (e.g., missing fields, short password, or duplicate username).
+ * - Returns a 500 status code if there is a server error during user creation or token generation.
+ *
+ * @example
+ * // Example request body:
+ * // {
+ * //   "username": "newuser",
+ * //   "password": "securepassword123"
+ * // }
+ * 
+ * // Example response on success:
+ * // {
+ * //   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ * // }
+ * 
+ * // Example response on failure (e.g., username already exists):
+ * // {
+ * //   "message": "Username already exists"
+ * // }
+ */
 
 export const register = async (req: Request, res: Response) => {
     const { username, password } = req.body;
